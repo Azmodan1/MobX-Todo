@@ -24,7 +24,7 @@ const App = observer(() => {
     if (value.filtered === 'Выполненные') {
       const fulfilledData = mobx.todos.filter(affair => affair.done === true);
       setValue(prevState => ({ ...prevState, data: fulfilledData }));
-    } else if (value.filtered == 'Невыполненные') {
+    } else if (value.filtered === 'Невыполненные') {
       const unfulfilledData = mobx.todos.filter(
         affair => affair.done === false
       );
@@ -35,14 +35,22 @@ const App = observer(() => {
   }, [value.filtered, mobx.todos]);
 
   return (
-    <div className='App'>
-      <div className='Todo__Wrapper'>
-        <div className='Todo__Container'>
+    <div className="App">
+      <div className="Todo__Wrapper">
+        <div className="Todo__Container">
           <MySelect value={value} handleChange={handleChange} />
+          {mobx.alerts.voidTitleAlert && (
+            <span> Название не может быть пустым !</span>
+          )}
+          {mobx.alerts.duplicateAlert && <span> Такое дело уже есть! </span>}
           <Form state={state} setState={setState} mobx={mobx} />
-          {value.data.map(affair => (
-            <Todo key={affair.id} affair={affair} todo={mobx} />
-          ))}
+          {value.data.length ? (
+            value.data.map(affair => (
+              <Todo key={affair.id} affair={affair} todo={mobx} />
+            ))
+          ) : (
+            <h2> Дел пока нет</h2>
+          )}
         </div>
       </div>
     </div>
